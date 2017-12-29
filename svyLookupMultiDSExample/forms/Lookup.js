@@ -29,12 +29,16 @@ function search() {
 	//add customers datasource to the list
 	var customers = mlobj.addLookup(datasources.db.example_data.customers.getDataSource())
 	customers.addField('customerid').setTitleText('Customer ID');
-	customers.addField('country').setTitleText('Country');
+	customers.addField('country').setTitleText('Country');	
+	customers.setDisplayField('companyname');
+	customers.setHeader('Customers');
 	
 	//add employees datasource to the list
 	var employees = mlobj.addLookup(datasources.db.example_data.employees.getDataSource())
 	employees.addField('firstname').setTitleText('First Name');
-	employees.addField('lastname').setTitleText('Last Name');
+	employees.addField('lastname').setTitleText('Last Name');	
+	employees.setDisplayField('firstname');
+	employees.setHeader('Employees');
 	
 	// show pop-up
 	/** @type {RuntimeComponent} */	

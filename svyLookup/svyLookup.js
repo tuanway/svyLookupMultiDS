@@ -57,10 +57,10 @@ function MultiLookup() {
 	 * @return {Lookup}
 	 */
 	this.addLookup = function(dataSource) {
-		var ds = new Lookup(dataSource);
-		ds.setHeader(dataSource);
-		Lookups[dataSource] = ds;
-		return ds;
+		var lu = new Lookup(dataSource);
+		lu.setHeader(dataSource);
+		Lookups[dataSource] = lu;
+		return lu;
 	}
 
 	/**
@@ -72,6 +72,16 @@ function MultiLookup() {
 	 */
 	this.getLookup = function(dataSource) {
 		return Lookups[dataSource]
+	}
+	
+	/**
+	 * Get all lookup objects
+	 *
+	 * @public
+	 * @return {Object<Lookup>}
+	 */
+	this.getAllLookups = function() {
+		return Lookups;
 	}
 
 	/**
