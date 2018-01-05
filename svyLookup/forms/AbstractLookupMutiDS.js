@@ -81,6 +81,7 @@ function search(txt) {
 			var sr = fs.getRecord(k);
 			foundset.newRecord();
 			nr = foundset.getSelectedRecord();
+			nr['record'] = sr;
 			nr['rec_type'] = 2 //detail type
 			nr['display'] = sr[lu.getDisplayField()]
 			nr['rec_order'] = order;
@@ -95,10 +96,10 @@ function search(txt) {
 		//update header text with search results
 		if (size) {
 			elements['table'].getColumn(0).headerText = 'Found ' + size + ' record' + (size > 1 ? 's' : '') + '.';
-			application.output('Found ' + size + ' record' + (size > 1 ? 's' : '') + '.')
+//			application.output('Found ' + size + ' record' + (size > 1 ? 's' : '') + '.')
 		} else {
 			elements['table'].getColumn(0).headerText = 'No results found.';
-			application.output('No results found.')
+//			application.output('No results found.')
 		}
 
 	}

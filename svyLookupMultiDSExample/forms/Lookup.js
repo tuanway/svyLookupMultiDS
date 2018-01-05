@@ -51,6 +51,6 @@ function search() {
  */
 function onSelect(data){
 	searchText = data.s;
-	if (data.rec.rec_type == 2.0)
-	application.output('selected : ' + data.rec.display);
+	if (data.rec.record)
+	application.output('selected : ' + data.rec.record);
 }
