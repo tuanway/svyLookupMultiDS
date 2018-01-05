@@ -5,6 +5,7 @@ arguments:null,\
 parameters:null\
 }\
 }",
+dataSource:"mem:inMemMultiDSLookup",
 extendsID:"77E446E3-635B-45AF-973F-4A33FBB8B0B0",
 items:[
 {

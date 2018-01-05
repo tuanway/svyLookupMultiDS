@@ -55,7 +55,7 @@ function search(txt) {
 		var s = scopes.svySearch.createSimpleSearch(fs);
 
 		// set the search text
-		s.setSearchText(searchText);
+		s.setSearchText(txt);
 
 		// iterate through all fields of lookup
 
@@ -69,9 +69,9 @@ function search(txt) {
 		if (fs.getSize()) {
 			foundset.newRecord();
 			var nr = foundset.getSelectedRecord();
-			nr['type'] = 1 //header type
+			nr['rec_type'] = 1 //header type
 			nr['display'] = lu.getHeader() //get Header field
-			nr['order'] = order;
+			nr['rec_order'] = order;
 			order++;
 		}
 
@@ -81,24 +81,23 @@ function search(txt) {
 			var sr = fs.getRecord(k);
 			foundset.newRecord();
 			nr = foundset.getSelectedRecord();
+			nr['rec_type'] = 2 //detail type
 			nr['display'] = sr[lu.getDisplayField()]
-			//			nr.id = sr[dataArray[i].PKdataprovider]
-			nr['source'] = sr.getDataSource();
-			nr['order'] = order;
+			nr['rec_order'] = order;
 			order++;
 			size++;
 		}
 
 		//save and sort foundset
 		databaseManager.saveData(foundset);
-		foundset.sort('col_order asc')
+		foundset.sort('rec_order asc')
 
 		//update header text with search results
 		if (size) {
-			elements.table.getColumn(0).headerText = 'Found ' + size + ' record' + (size > 1 ? 's' : '') + '.';
+			elements['table'].getColumn(0).headerText = 'Found ' + size + ' record' + (size > 1 ? 's' : '') + '.';
 			application.output('Found ' + size + ' record' + (size > 1 ? 's' : '') + '.')
 		} else {
-			elements.table.getColumn(0).headerText = 'No results found.';
+			elements['table'].getColumn(0).headerText = 'No results found.';
 			application.output('No results found.')
 		}
 
@@ -153,14 +152,9 @@ function newInstance(multiLookupObj) {
 	var jsForm = solutionModel.cloneForm(formName, solutionModel.getForm(controller.getName()));
 
 	//create an in memory datasource to store data
-	var eds = databaseManager.createEmptyDataSet();
-	eds.addColumn('id');
-	eds.addColumn('display');
-	eds.addColumn('type');
-	eds.addColumn('order');
-	var uri = eds.createDataSource('svyMultiDS', [JSColumn.UUID_COLUMN, JSColumn.TEXT, JSColumn.NUMBER, JSColumn.NUMBER]);
-
-	jsForm.dataSource = uri;
+	databaseManager.createEmptyDataSet().createDataSource('inMemMultiDSLookup')
+	//
+	//	jsForm.dataSource = uri;
 
 	// pass control to sub form(s)
 	onCreateInstance(jsForm);
@@ -177,14 +171,8 @@ function newInstance(multiLookupObj) {
  * @properties={typeid:24,uuid:"5A59560F-F374-408D-98FB-A8601B7AA54D"}
  */
 function onSelect() {
-
 	// dismiss popup
 	dismiss();
-
-	// invoke callback
-	if (selectHandler) {
-		selectHandler.call(this, foundset.getSelectedRecord());
-	}
 }
 
 /**
@@ -194,5 +182,10 @@ function onSelect() {
  * @properties={typeid:24,uuid:"FEE59FA7-0062-4DE7-8A6C-BEBBCA4A729B"}
  */
 function dismiss() {
+	
+	// invoke callback
+	if (selectHandler) {
+		selectHandler.call(this, { s: searchText, rec: foundset.getSelectedRecord() });
+	}	
 	plugins.window.closeFormPopup(null);
 }

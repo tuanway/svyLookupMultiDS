@@ -20,7 +20,7 @@ function search() {
 	products.addField('products_to_suppliers.companyname').setTitleText('Supplier');
 	
 	//set a single display field to appear in the popup
-	products.setDisplayField('products_to_categories.categoryname');
+	products.setDisplayField('productname');
 	
 	//set header text to appear for results in this datasource in the popup
 	//if nothing is set else we will use datasource name.
@@ -49,6 +49,8 @@ function search() {
 /**
  * @properties={typeid:24,uuid:"B411BF08-9B9F-4A5C-AFB0-5C17AAC0C159"}
  */
-function onSelect(record){
-	application.output(record);
+function onSelect(data){
+	searchText = data.s;
+	if (data.rec.rec_type == 2.0)
+	application.output('selected : ' + data.rec.display);
 }
