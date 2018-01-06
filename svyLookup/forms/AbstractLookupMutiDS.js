@@ -69,8 +69,8 @@ function search(txt) {
 		if (fs.getSize()) {
 			foundset.newRecord();
 			var nr = foundset.getSelectedRecord();
-			nr['rec_type'] = 1 //header type
-			nr['display'] = lu.getHeader() //get Header field
+			nr['rec_type'] = 'header'
+			nr['display'] = lu.getHeader()
 			nr['rec_order'] = order;
 			order++;
 		}
@@ -81,8 +81,9 @@ function search(txt) {
 			var sr = fs.getRecord(k);
 			foundset.newRecord();
 			nr = foundset.getSelectedRecord();
-			nr['record'] = sr;
-			nr['rec_type'] = 2 //detail type
+			nr['rec_pk'] = sr.getPKs().join(','); //support for combo PKS
+			nr['rec_ds'] = sr.getDataSource();
+			nr['rec_type'] = 'detail'
 			nr['display'] = sr[lu.getDisplayField()]
 			nr['rec_order'] = order;
 			order++;
@@ -96,10 +97,10 @@ function search(txt) {
 		//update header text with search results
 		if (size) {
 			elements['table'].getColumn(0).headerText = 'Found ' + size + ' record' + (size > 1 ? 's' : '') + '.';
-//			application.output('Found ' + size + ' record' + (size > 1 ? 's' : '') + '.')
+			//			application.output('Found ' + size + ' record' + (size > 1 ? 's' : '') + '.')
 		} else {
 			elements['table'].getColumn(0).headerText = 'No results found.';
-//			application.output('No results found.')
+			//			application.output('No results found.')
 		}
 
 	}
@@ -153,9 +154,17 @@ function newInstance(multiLookupObj) {
 	var jsForm = solutionModel.cloneForm(formName, solutionModel.getForm(controller.getName()));
 
 	//create an in memory datasource to store data
-	databaseManager.createEmptyDataSet().createDataSource('inMemMultiDSLookup')
-	//
-	//	jsForm.dataSource = uri;
+	var ds = databaseManager.createEmptyDataSet()
+
+	ds.addColumn('display')
+	ds.addColumn('rec_type')
+	ds.addColumn('rec_ds')
+	ds.addColumn('rec_pk')
+	ds.addColumn('rec_order')
+
+	var uri = ds.createDataSource('inMemMultiDSLookup', [JSColumn.TEXT, JSColumn.TEXT, JSColumn.TEXT, JSColumn.TEXT, JSColumn.TEXT])
+
+	jsForm.dataSource = uri;
 
 	// pass control to sub form(s)
 	onCreateInstance(jsForm);
@@ -181,12 +190,21 @@ function onSelect() {
  *
  * @protected
  * @properties={typeid:24,uuid:"FEE59FA7-0062-4DE7-8A6C-BEBBCA4A729B"}
+ * @AllowToRunInFind
  */
 function dismiss() {
-	
+	//identify record
+	var fs = databaseManager.getFoundSet(foundset.getSelectedRecord()['rec_ds']);
+	var pk = foundset.getSelectedRecord()['rec_pk'].split(',')
+	var pkc = databaseManager.getTable(fs).getRowIdentifierColumnNames()
+	fs.find()
+	for (var i = 0; i < pkc.length; i++) {
+		fs[pkc[i]] = pk[i];
+	}
+	fs.search()
 	// invoke callback
 	if (selectHandler) {
-		selectHandler.call(this, { s: searchText, rec: foundset.getSelectedRecord() });
-	}	
+		selectHandler.call(this, { searchtext: searchText, record: fs.getSelectedRecord() });
+	}
 	plugins.window.closeFormPopup(null);
 }

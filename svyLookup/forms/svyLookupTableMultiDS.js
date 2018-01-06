@@ -16,25 +16,25 @@ var keyListenerReady = false;
  */
 function onCreateInstance(jsForm) {
 	// table component
-	//	var table = jsForm.getWebComponent(elements.table.getName());
-	//
-	//	// add columns
-	//	/** @type {Array<servoyextra-table.column>} */
-	//	var columns = table.getJSONProperty('columns');
-	//
-	//	var fields = [{ dataprovider: 'id', titleText: 'Title' }, { dataprovider: 'display', titleText: 'Title' },
-	//		]
-	//
-	//	for (var i = 0; i < fields.length; i++) {
-	//		var field = fields[i];
-	//		/** @type {servoyextra-table.column} */
-	//		var column = { };
-	//		column.dataprovider = field.dataprovider;
-	//		column.headerText = field.titleText;
-	//		columns.push(column);
-	//	}
-	//
-	//	table.setJSONProperty('columns', columns);
+	var table = jsForm.getWebComponent(elements.table.getName());
+	
+	// add columns
+	/** @type {Array<servoyextra-table.column>} */
+	var columns = table.getJSONProperty('columns');
+
+	var fields = [{ dataprovider: 'display' },
+		]
+
+	for (var i = 0; i < fields.length; i++) {
+		var field = fields[i];
+		/** @type {servoyextra-table.column} */
+		var column = { };
+		column.dataprovider = field.dataprovider;		
+		columns.push(column);
+	}
+	
+	table.setJSONProperty('columns', columns);
+	table.setJSONProperty('rowStyleClassDataprovider', 'rec_type');	
 }
 
 /**
@@ -66,8 +66,6 @@ function onFocusGainedSearch(event) {
 function onShow(firstShow, event) {
 	keyListenerReady = false;
 	elements.searchText.requestFocus(true);
-//	plugins.window.createShortcut('ENTER', onEnter, controller.getName());
-//	plugins.window.createShortcut('ESC', dismiss, controller.getName());
 }
 
 /**

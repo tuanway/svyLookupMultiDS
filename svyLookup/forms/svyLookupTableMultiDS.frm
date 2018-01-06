@@ -5,7 +5,6 @@ arguments:null,\
 parameters:null\
 }\
 }",
-dataSource:"mem:inMemMultiDSLookup",
 extendsID:"F64085E6-16A8-405D-B8CB-ED40AF9A4C9F",
 items:[
 {
@@ -32,12 +31,7 @@ uuid:"861DA20B-452D-4383-B0EF-093DD8733B18"
 anchors:15,
 json:{
 anchors:15,
-columns:[
-{
-dataprovider:"display",
-svyUUID:"A96B45FB-F22C-46F2-9D70-2DA77429F950"
-}
-],
+columns:[],
 foundset:{
 foundsetSelector:""
 },
@@ -47,7 +41,6 @@ y:40
 },
 onCellClick:"65D064BB-6D4B-4F60-ACA9-AAFF4F60B197",
 pageSize:0,
-rowStyleClassDataprovider:"style_class_dp",
 size:{
 height:260,
 width:100
