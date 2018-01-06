@@ -14,12 +14,19 @@
 .svy-multids-header {
 	font-size: 15px;
 	font-weight: bold;
-	background-color:gray;
-	color:white;
+	background-color: gray;
+	color: white;
 }
 
 .table-servoyextra-selected {
-	background-color:#CCCCFF!important;
-	color:black!important;
-} 
+	background-color: #CCCCFF !important;
+	color: black !important;
+}
 
+td div {
+	padding-left: 5px;
+}
+
+.table-servoyextra-header-label {
+	padding-left: 5px;
+}
