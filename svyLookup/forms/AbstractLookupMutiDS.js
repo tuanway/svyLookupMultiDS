@@ -69,7 +69,7 @@ function search(txt) {
 		if (fs.getSize()) {
 			foundset.newRecord();
 			var nr = foundset.getSelectedRecord();
-			nr['rec_type'] = 'header'
+			nr['rec_type'] = 'svy-multids-header'
 			nr['display'] = lu.getHeader()
 			nr['rec_order'] = order;
 			order++;
@@ -81,9 +81,9 @@ function search(txt) {
 			var sr = fs.getRecord(k);
 			foundset.newRecord();
 			nr = foundset.getSelectedRecord();
-			nr['rec_pk'] = sr.getPKs().join(','); //support for combo PKS
+			nr['rec_pk'] = sr.getPKs().join(','); //get combo PKS
 			nr['rec_ds'] = sr.getDataSource();
-			nr['rec_type'] = 'detail'
+			nr['rec_type'] = 'svy-multids-detail'
 			nr['display'] = sr[lu.getDisplayField()]
 			nr['rec_order'] = order;
 			order++;
@@ -194,17 +194,19 @@ function onSelect() {
  */
 function dismiss() {
 	//identify record
-	var fs = databaseManager.getFoundSet(foundset.getSelectedRecord()['rec_ds']);
-	var pk = foundset.getSelectedRecord()['rec_pk'].split(',')
-	var pkc = databaseManager.getTable(fs).getRowIdentifierColumnNames()
-	fs.find()
-	for (var i = 0; i < pkc.length; i++) {
-		fs[pkc[i]] = pk[i];
-	}
-	fs.search()
-	// invoke callback
-	if (selectHandler) {
-		selectHandler.call(this, { searchtext: searchText, record: fs.getSelectedRecord() });
+	if (foundset.getSelectedRecord()['rec_ds']) {
+		var fs = databaseManager.getFoundSet(foundset.getSelectedRecord()['rec_ds']);
+		var pk = foundset.getSelectedRecord()['rec_pk'].split(',')
+		var pkc = databaseManager.getTable(fs).getRowIdentifierColumnNames()
+		fs.find()
+		for (var i = 0; i < pkc.length; i++) {
+			fs[pkc[i]] = pk[i];
+		}
+		fs.search()
+		// invoke callback
+		if (selectHandler) {
+			selectHandler.call(this, { searchtext: searchText, record: fs.getSelectedRecord() });
+		}
 	}
 	plugins.window.closeFormPopup(null);
 }

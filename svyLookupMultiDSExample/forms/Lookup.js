@@ -46,16 +46,24 @@ function search() {
 	employees.addField('lastname')
 	employees.setDisplayField('firstname');
 	employees.setHeader('Employees');
-	
-	var orderDetail = mlobj.addLookup(datasources.db.example_data.order_details.getDataSource())
-	orderDetail.addField('orderid')
-	orderDetail.setDisplayField('orderid');
-	orderDetail.setHeader('Orders');
-	
+
+	//add suppliers datasource to the list
+	var suppliers = mlobj.addLookup(datasources.db.example_data.suppliers.getDataSource())
+	suppliers.addField('companyname')
+	suppliers.setDisplayField('companyname');
+	suppliers.setHeader('Suppliers');
+
+	//add territory datasource to the list
+	var territory = mlobj.addLookup(datasources.db.example_data.territories.getDataSource())
+	territory.addField('territorydescription')
+	territory.setDisplayField('territorydescription');
+	territory.setHeader('Territory');
+
 	// show pop-up
 	/** @type {RuntimeComponent} */
 	var component = elements.search;
 	mlobj.showPopUpMultiDS(onSelect, component, null, null, searchText);
+	result = '';
 }
 
 /**
@@ -65,6 +73,9 @@ function search() {
  */
 function onSelect(data) {
 	searchText = data.searchtext;
-	application.output('record : ' + data.record);
-	application.output('datasource : ' + data.record.getDataSource());
+	var cols = databaseManager.getTable(data.record.getDataSource()).getColumnNames()
+	result += '<b>'+ data.record.getDataSource() + '<br></b>';
+	for (var i = 0; i < cols.length; i++) {
+		result += cols[i] + ': ' + data.record[cols[i]] + '<br>';
+	}
 }

@@ -66,6 +66,7 @@ function onFocusGainedSearch(event) {
 function onShow(firstShow, event) {
 	keyListenerReady = false;
 	elements.searchText.requestFocus(true);
+	plugins.window.createShortcut('ESC',dismiss,controller.getName());
 }
 
 /**
@@ -93,7 +94,7 @@ function onKey(value, keyCode, altKeyCode) {
 		elements.table.requestFocus();
 		return;
 	}
-
+	
 	// run search
 	search(value);
 }

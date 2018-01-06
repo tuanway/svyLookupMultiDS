@@ -37,6 +37,7 @@ typeid:19,
 uuid:"C9CF1CE3-86CD-41ED-809F-ED5297BD7982"
 },
 {
+anchors:13,
 dataProviderID:"result",
 displayType:8,
 editable:false,
